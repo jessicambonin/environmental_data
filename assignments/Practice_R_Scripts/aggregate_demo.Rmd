@@ -1,0 +1,31 @@
+---
+title: "Aggregate Demo"
+output: html_document
+---
+
+```{r }
+require(palmerpenguins)
+aggregate(penguins$flipper_length_mm, list(penguins$species), FUN = mean)
+```
+
+```{r }
+aggregate(penguins$flipper_length_mm, list(penguins$species), FUN = mean, na.rm = TRUE)
+```
+
+```{r }
+aggregate(flipper_length_mm ~ species, data = penguins, FUN = mean, na.rm = TRUE)
+```
+
+```{r }
+boxplot(flipper_length_mm ~ species, data = penguins, FUN = mean, na.rm = TRUE)
+```
+
+```{r }
+aggregate(flipper_length_mm ~ species + sex, data = penguins, FUN = mean, na.rm = TRUE)
+```
+
+```{r }
+boxplot(flipper_length_mm ~ species + sex, data = penguins, FUN = mean, na.rm = TRUE)
+```
+
+```{}

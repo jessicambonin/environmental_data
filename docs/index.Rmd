@@ -1,0 +1,12 @@
+---
+title: "Jessica's Project Homepage"
+author: "Jessica Bonin"
+date: "12/6/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Welcome to Jessica's class project!

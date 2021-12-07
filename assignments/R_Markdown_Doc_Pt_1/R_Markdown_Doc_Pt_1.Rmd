@@ -1,0 +1,23 @@
+---
+title: "R Markdown Documents - Part 1"
+subtitle: "Analysis of Environmental Data"
+author: "Jessica Bonin"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+---
+
+# Introduction
+My name is __Jessica__ __Bonin__. I am a graduate student in _Environmental_ _Conservation_. I am studying habitat and resource selection of black bears using GPS collar data.
+
+# Concepts List
+1. Basic R
+2. Review of statistical analysis
+3. Combining raster and vector data
+4. Writing and understanding code
+
+# Course List
+* African Coastal Ecology and Field Techniques
+* GIS Problem Solving
+* Environmental Leadership

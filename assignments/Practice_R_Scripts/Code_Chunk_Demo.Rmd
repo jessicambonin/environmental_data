@@ -1,0 +1,87 @@
+---
+title: "code_chunk_demo"
+author: "Jessica Bonin"
+date: "10/20/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load_peguin_data, echo = TRUE, eval = TRUE}
+require(palmerpenguins)
+head(penguins)
+```
+
+```{r sample pairplot a}
+plot(penguins[, 3:5])
+```
+
+```{r my chunck 1}
+```
+
+# Show or hide code: is echo = TRUE or FALSE
+# Show or hie chunk output in the rendar doc: eval = TRUE or FALSE
+
+```{r sample pairplot b, fig.width=4, fig.asp=1}
+plot(penguins[, 3:5])
+```
+
+```{r sample pairplot c, fig.width=4, fig.asp=1/1.5}
+plot(penguins[, 3:5])
+```
+
+# Will only show code, not the plot
+```{r sample pairplot d, eval= FALSE}
+plot(penguins[, 3:5])
+```
+
+# Will only show the figure, not the r code
+```{r sample pairplot f, echo= FALSE}
+plot(penguins[, 3:5])
+```
+
+# Tabset Example {.tabset}
+
+## Tab 1
+Tab 1 Contents
+
+## Tab 2
+Tab 2 Contents
+
+## Tab 3
+Tab 3 Contents
+
+# Next Section
+Non-Tabbed Material
+
+# Tabset Pill Example {.tabset .tabset-pills}
+
+## Tab 1
+Tab 1 Contents
+
+## Tab 2
+Tab 2 Contents
+
+## Tab 3
+Tab 3 Contents
+
+# Next Section
+Non-Tabbed Material
+
+
+# Different Penguin Plots {.tabset .tabset-pills}
+
+The following tabs contain different plot types
+
+## Histogram
+```{r flipper length histogram, fig.asp=1/1.5}
+hist(penguins$flipper_length_mm)
+```
+
+## Another Histogram (Bill Length)
+```{r bill length histogram, echo = FALSE}
+hist(penguins$bill_length_mm)
+```
+
