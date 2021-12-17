@@ -303,11 +303,12 @@ persp3d(
   theta = 30, phi = 30, expand = .75,
   ticktype = 'detailed')
 
+require(here)
 require(htmlwidgets)
 saveWidget(
   rglwidget(),
   file = here(
-    "images",
+    "docs",
     "n_effect_size_power_sim_plot.html"),
   selfcontained = TRUE
 )
@@ -335,7 +336,7 @@ n_sds = 20
 pop_sds = seq(from = 0.01, to = 1.5, length.out = n_sds)
 
 # look
-pop_sd_power = numeric(length(pop_sds))
+pop_sd_power = numeric(length(n_sds))
 
 for(j in 1:length(pop_sds))
 {
@@ -362,18 +363,18 @@ save(
 
 # Line plot of standard deviation (x-axis) and statistical power (y-axis)
 plot(power ~ pop_sds, data = sim_output_dispersion,
-     type = 'l', xlab = 'Standard Deviation', ylab = 'Power')
+     type = 'l', main= "Dispersion and Statistical Power", xlab = 'Standard Deviation', ylab = 'Power')
 
 # Add a dotted vertical red line at the observed population standard deviation value.
 abline(v = sd_obs, lty = 2, col = 'red')
 
 
 
-# Sedcond one we built
+# Second one we built
 alpha = 0.05
 
 # Start with a small number
-n_sims = 10
+n_sims = 100
 p_vals = numeric(n_sims)
 
 # What was the observed standard deviation?
@@ -382,9 +383,9 @@ sd_obs
 # specify the number of different standard deviation values to simulate:
 # Start with a small number
 n_sds = 20
-pop_sds = seq(from = 0.05, to = , length.out = n_sds)
+pop_sds = seq(from = 0.05, to = 1.5, length.out = n_sds)
 
-pop_sd_power = numeric(length(pop_sds))
+pop_sd_power = numeric(length(n_sds))
 
 sample_sizes = seq(5, 100)
 
@@ -403,7 +404,7 @@ for(k in 1:length(pop_sds))
       fit_sim = linear_sim_fit(
         x = x_vals,
         y_int = int_obs,
-        slope = effect_size,
+        slope = slope_obs,
         st_dev = pop_sd_k
       )
       p_vals[i] = summary(fit_sim)$coefficients[2, 'Pr(>|t|)']
@@ -428,5 +429,43 @@ save(
   sim_3_dat, 
   file = here::here("data", "lab_ll_sim_output_dispersion_n_1000.RData"))
 
+# Question 3
+contour(
+  x = sim_3_dat$pop_sd,
+  y = sim_3_dat$sample_size,
+  z = sim_3_dat$power,
+  xlab = "Population SD",
+  ylab = "Sample Size",
+  main = "Contour Plot of Statistical Power",
+  levels = seq(0, 1, length.out = 9),
+  drawlabels = TRUE,
+  # method = "simple")
+  method = "edge")
 
+require(rgl)
+persp(
+  x = sim_3_dat$pop_sd,
+  y = sim_3_dat$sample_size,
+  z = sim_3_dat$power,
+  xlab = "beta", ylab = "n", zlab = "power",
+  col = 'lightblue',
+  theta = 30, phi = 30, expand = .75,
+  ticktype = 'detailed')
 
+persp3d(
+  x = sim_3_dat$pop_sd,
+  y = sim_3_dat$sample_size,
+  z = sim_3_dat$power,
+  xlab = "beta", ylab = "n", zlab = "power",
+  col = 'darkgoldenrod3',
+  theta = 30, phi = 30, expand = .75,
+  ticktype = 'detailed')
+
+# Question 5
+require(here)
+require(htmlwidgets)
+saveWidget(
+  rglwidget(),
+  file = here("docs","n_pop_SD_power_sim_plot.html"),
+  selfcontained = TRUE
+)

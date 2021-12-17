@@ -1,0 +1,262 @@
+---
+title: 'Final Project: R Reference'
+author: "Jessica Bonin"
+date: "12/16/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# R Reference Guide {.tabset .tabset-pills}
+
+
+## Loading Data and Packages
+- To load packages, you can install them using **install.packages()**.
+- To "turn on" or use a package that you have already installed into r, you can use either **library()** or **require()**.
+- The function **here()** lets to tell r where to pull data from your file directory. It starts where your r project is saved, in this case it is in my environmental_data folder.
+- To create a data.frame in r, you name your data and tell r where to pull the data from.
+
+```{r}
+# Installing a package
+# install.packages("palmerpenguins")
+
+# Turning on a package that was previously installed
+library(palmerpenguins)
+# OR
+require(palmerpenguins)
+
+# Creating a data.frame
+penguins <- palmerpenguins::penguins
+
+require(here)
+ginkgo <- read.csv(here("data", "ginkgo_data_2021.csv"))
+```
+
+## Data Structures
+### Vectors
+You can create numeric, character, or boolean vectors by using **c()**. You can name the values in a vector or name a whole vector by using **names()**.
+```{r}
+# Creating a vector of numbers
+numeric_vector <- c(2, 4, 6, 8)
+
+# Creating a vector of characters
+character_vector <- c("who", "do", "we", "appreciate")
+
+# Creating a boolean_vector:
+boolean_vector <- c(TRUE, TRUE, FALSE)
+
+# Naming numeric_vector
+names(numeric_vector) <- c("two", "four", "six", "eight")
+```
+### Matrices 
+A matrix is a collection of elements of the same data type. You can name rows or columns in a matrix using **rownames()** and **colnames()**.
+```{r}
+# Matrix with numbers 1-9 in 3 rows
+my_matrix <- matrix(1:9, byrow = TRUE, nrow = 3)
+# You can also use a vector in place of numbers (instead of 1:9). It can be a defined vector or using c().
+
+# Naming rows and columns
+rows <- c("row1", "row2", "row3")
+columns <- c("col1", "col2", "col3")
+rownames(my_matrix) <- rows
+colnames(my_matrix) <- columns 
+```
+### Length
+Get or set the length of an R object using **length()**.
+```{r}
+length(numeric_vector)
+length(boolean_vector)
+length(my_matrix)
+# Find out how many variables are in a data frame
+length(ginkgo) 
+length(penguins)
+```
+
+### Data Frames
+You can create data frames many different ways (see Loading Data and Packages). This is an example of how to create a data frame from scratch (example from **tutorialspoint.com**).
+```{r}
+emp.data <- data.frame(
+  emp_id = c (1:5), 
+  emp_name = c("Rick","Dan","Michelle","Ryan","Gary"),
+  salary = c(623.3,515.2,611.0,729.0,843.25), 
+   
+  start_date = as.Date(c("2012-01-01", "2013-09-23", "2014-11-15", "2014-05-11",
+      "2015-03-27")),
+  stringsAsFactors = FALSE
+)
+print(emp.data)
+```
+### Data Frame Counts
+Use **nrow()** to find out the number of rows/observations in a data frame. Use **ncol()** to find out the number of columns/variables in a data frame. Use **dim()** to find out the dimensions of a data frame.
+```{r}
+nrow(ginkgo)
+ncol(ginkgo)
+dim(ginkgo)
+```
+
+## Subsetting
+You may want to select elements from a vector, matrix, or data frame. There are a few ways you can do this...
+```{r}
+# Using $ to select a column of data
+ginkgo$seeds_present
+
+# Using [] to subset by position:
+# Select first row of the ginkgo data
+ginkgo[1,]
+
+# Select the element in row 2, column 3
+ginkgo[2,3]
+
+# Select the 3rd column of the ginkgo data
+ginkgo[,3]
+
+# Using subset() function to retrieve all the data for Adelie penguins (in the species column) from the peuguins dataset.
+Adelie <- subset(penguins, species == "Adelie")
+Gentoo <- subset(penguins, species == "Gentoo")
+Chinstrap <- subset(penguins, species == "Chinstrap")
+```
+
+## Numerical Data Exploration
+There are functions in r that you can use for data calculations. Using **na.rm** will excuse missing data to allow the function to run.
+```{r}
+# Summary tells you a summary of the results (compare it to the mean() function).
+summary(penguins$body_mass_g)
+mean(penguins$body_mass_g, na.rm = TRUE)
+sd(penguins$body_mass_g, na.rm = TRUE)
+```
+
+## Graphical Data Exploration
+There are many ways to graph data in r. The most common I have used are: scatterplots, histograms, and boxplots.
+
+### Scatterplots
+Scatterplots graph data as (x,y) points. They are helpful in evaluating trends in the relationships of the data.
+```{r}
+# col = color
+# pch = symbol
+# cex = size
+plot(ginkgo$max_width, ginkgo$max_depth, col = "cadetblue4",
+     pch = 1, cex = 2, main = "Ginkgo Leaf Max Width by Max Depth", xlab = "Max Width (mm)", ylab = "Max Depth (mm)", xlim = c(0,131), ylim = c(0,150))
+```
+
+### Histograms
+Histograms graph data as bar charts based on the frequency of data. They are good at evaluating distribution. Use **par()** to put all histograms in one figure.
+```{r, fig.height=7, fig.width=7}
+par(mfrow=c(2,2))
+hist(penguins$flipper_length_mm, 
+     main = "Penguins Flipper Length", 
+     xlab = "Flipper Length (mm)", col = "goldenrod3",
+     breaks = 15, xlim = c(170,235))
+hist(Adelie$flipper_length_mm, 
+     main = "Adelie Flipper Length", 
+     xlab = "Flipper Length (mm)", col = "darkslategray4",
+     breaks = 15, xlim = c(170,210))
+hist(Gentoo$flipper_length_mm,
+     main = "Gentoo Flipper Length", 
+     xlab = "Flipper Length (mm)", col = "coral3",
+     breaks = 15, xlim = c(200,235))
+hist(Chinstrap$flipper_length_mm,
+     main = "Chinstrap Flipper Length", 
+     xlab = "Flipper Length (mm)", col = "darkseagreen4",
+     breaks = 15, xlim = c(170,220))
+```
+
+### Boxplots
+Boxplots are good for looking at the spread of the data as well as the distribution. They are also helpful when comparing variables of the data set.
+```{r, fig.height=7, fig.width=9}
+par(mfrow=c(1,2))
+# Simple boxplot
+boxplot(ginkgo$petiole_length, main = "Ginkgo Petiole Length", 
+        ylab = "Petiole Length (mm)", col = "blue")
+
+# Conditional boxplot
+boxplot(max_depth ~ seeds_present, data = ginkgo,
+        main = "Ginkgo Max Depth \n by Seed Presence", xlab = "Seeds Present", 
+        ylab = "Max Depth (mm)", col = c("coral3", "darkseagreen3"))
+```
+
+## Disctribution Functions
+- The Normal Distribution: Density, distribution function, quantile function and random generation for the normal distribution with mean equal to mean and standard deviation equal to sd.
+- The Binomial Distribution: Density, distribution function, quantile function and random generation for the binomial distribution with parameters size and prob. This is conventionally interpreted as the number of ‘successes’ in size trials.
+- Some of these examples came from **tutorialspoint.com**. 
+
+### dnorm(): Probability Density
+Using **dnorm()** gives height of the probability distribution at each point for a given mean and standard deviation.
+dnorm(x, mean = 0, sd = 1, log = FALSE). x = a vector of **numbers**.
+```{r}
+# Create a sequence of numbers between -10 and 10 incrementing by 0.1.
+x <- seq(-10, 10, by = .1)
+
+# Choose the mean as 2.5 and standard deviation as 0.5.
+y <- dnorm(x, mean = 2.5, sd = 0.5)
+plot(x,y)
+
+# Finding the a single probability
+dnorm(0.5, mean = 2.5, sd = 0.5)
+```
+
+### pnorm(): Cumulative Distribution Function
+Using **pnorm()** gives the probability of a normally distributed random number to be less that the value of a given number.
+pnorm(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE). q = a vector of **numbers**.
+```{r}
+# Create a sequence of numbers between -10 and 10 incrementing by 0.2.
+x <- seq(-10,10,by = .2)
+ 
+# Choose the mean as 2.5 and standard deviation as 2. 
+y <- pnorm(x, mean = 2.5, sd = 2)
+plot(x,y)
+
+# Finding the a single probability
+pnorm(3, mean = 2.5, sd = 2)
+```
+
+### qnorm(): Quantile Function
+Using **qnorm()** takes the probability value and gives a number whose cumulative value matches the probability value.
+qnorm(p, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE). p = a vector of **probabilities**.
+```{r}
+# Create a sequence of probability values incrementing by 0.02.
+x <- seq(0, 1, by = 0.02)
+
+# Choose the mean as 2 and standard deviation as 3.
+y <- qnorm(x, mean = 2, sd = 1)
+plot(x,y)
+
+# Finding the a single probability
+qnorm(0.43, mean = 2, sd = 1)
+```
+
+### dbinom()
+Using **dbinom()** gives the probability density distribution at each point.
+dbinom(x, size, prob, log = FALSE). x = a vector of **numbers**.
+```{r}
+# Create a sample of 50 numbers which are incremented by 1.
+x <- seq(0, 50, by = 1)
+
+# Create the binomial distribution.
+y <- dbinom(x, 50, 0.5)
+plot(x,y)
+
+# Probability of observing 5 out of 9 with a 1/3 probability of observation
+dbinom(5, 9, 1/3)
+```
+
+### pbinom()
+Using **pbinom()** gives the cumulative probability of an event. It is a single value representing the probability.
+pbinom(q, size, prob, lower.tail = TRUE, log.p = FALSE). q = a vector of **numbers**.
+```{r}
+# Probability of getting 26 or less heads from a 51 tosses of a coin.
+pbinom(26, 51, 0.5)
+
+# Probability of getting 26 or more heads from a 51 tosses of a coin.
+1-pbinom(25, 51, 0.5)
+```
+
+### qbinom()
+Using **qbinom()** takes the probability value and gives a number whose cumulative value matches the probability value.
+qbinom(p, size, prob, lower.tail = TRUE, log.p = FALSE). p = a vector of **probabilities**.
+```{r}
+# How many heads will have a probability of 0.25 will come out when a coin
+# is tossed 51 times.
+qbinom(0.25, 51, 1/2)
+```
